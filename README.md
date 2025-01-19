@@ -6,6 +6,10 @@ Viewing modern situations through the lens of Gita's teachings - An AI-powered p
 
 Gita Lens is an innovative application that reframes modern situations through the timeless wisdom of the Bhagavad Gita. By leveraging advanced language models and careful prompt engineering, it helps users find relevant guidance from this ancient text for their contemporary challenges.
 
+## 📸 Screenshot
+
+![Gita Lens Interface](screenshot.png)
+
 ## 🎯 Purpose
 
 In today's fast-paced world, the eternal wisdom of the Bhagavad Gita remains profoundly relevant. Gita Lens serves as a bridge between:
@@ -17,9 +21,8 @@ In today's fast-paced world, the eternal wisdom of the Bhagavad Gita remains pro
 
 - **Frontend**: Chainlit for an interactive chat interface
 - **Backend**: Python
-- **LLM Integration**: Large Language Models for text generation and understanding
+- **LLM Integration**: Ollama 3.2 (easily configurable to use other LLMs)
 - **Prompt Engineering**: Carefully crafted prompts to maintain philosophical accuracy
-- **Storage**: SQLite for chat history and user sessions
 
 ## 🌟 Features
 
@@ -33,23 +36,27 @@ In today's fast-paced world, the eternal wisdom of the Bhagavad Gita remains pro
 
 1. Clone the repository
 
-```
-bash
+```bash
 git clone https://github.com/yourusername/gita-lens.git
 cd gita-lens
 ```
 
 2. Install dependencies
 
-```
-bash
+```bash
 pip install -r requirements.txt
 ```
 
-3. Run the application
+3. Install Ollama and download the model
 
+```bash
+# Install Ollama from https://ollama.ai
+ollama pull 3.2
 ```
-bash
+
+4. Run the application
+
+```bash
 chainlit run app.py
 ```
 
@@ -72,8 +79,9 @@ We welcome contributions that help bridge ancient wisdom with modern technology.
 
 - [Bhagavad Gita As It Is](https://vedabase.io/en/library/bg/)
 - [Understanding the Gita](docs/understanding-gita.md)
+- [Chainlit Documentation](https://docs.chainlit.io)
+- [LangGraph Documentation](https://python.langchain.com/docs/langgraph)
 - [Technical Documentation](docs/technical-docs.md)
-- [API Reference](docs/api-reference.md)
 
 ## 📜 License
 

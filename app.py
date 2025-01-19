@@ -35,11 +35,16 @@ async def generate_core_story(state: StoryState) -> StoryState:
     story_architect_prompt = PromptTemplate(
         input_variables=["theme"],
         template=(
-            "You are a philosopher deeply versed in the Bhagavad Gita. Based on the theme '{theme}', "
-            "create a contemporary life problem or dilemma that many people face today. "
-            "The problem should be relatable, emotionally resonant, and complex enough to warrant "
-            "spiritual guidance. Frame it in 2-3 sentences, focusing on the internal struggle "
-            "and ethical complexity, similar to Arjuna's dilemma in the Bhagavad Gita."
+            "As a wise interpreter of the Bhagavad Gita, examine the theme '{theme}' "
+            "and identify a pressing contemporary challenge that many people face today. "
+            "Focus on a situation where modern life intersects with the eternal wisdom "
+            "of the Gita. The challenge should:\n"
+            "1. Be a real-world situation that people commonly face today\n"
+            "2. Involve an ethical or spiritual dilemma that isn't easily solved\n"
+            "3. Mirror the depth of Arjuna's confusion in the Gita\n"
+            "4. Need guidance that the Gita's teachings could illuminate\n\n"
+            "Frame this in 2-3 sentences, emphasizing both the external situation "
+            "and the internal struggle."
         ),
     )
     chain = story_architect_prompt | llm | output_parser
@@ -55,13 +60,18 @@ async def create_characters(state: StoryState) -> StoryState:
     character_creator_prompt = PromptTemplate(
         input_variables=["core_story"],
         template=(
-            "For this modern dilemma: {core_story}\n"
-            "Create 2-3 main characters, including:\n"
-            "1. A protagonist facing the central conflict, similar to Arjuna's position of uncertainty\n"
-            "2. A wise mentor figure (like Krishna) who can offer guidance through Bhagavad Gita's teachings\n"
-            "3. (Optional) A supporting character affected by the protagonist's decisions\n\n"
-            "For each character, describe their internal struggles, beliefs, and how they relate to the core conflict. "
-            "Make them realistic and relatable to modern readers while embodying timeless spiritual qualities."
+            "For this modern situation: {core_story}\n"
+            "Create 3 essential characters that embody the dynamics found in the Bhagavad Gita:\n\n"
+            "1. A protagonist who, like Arjuna, faces a difficult choice and experiences confusion (dharma-sankata). "
+            "They should be a relatable modern person dealing with real-world pressures.\n\n"
+            "2. A mentor figure who, like Krishna, can illuminate the situation through Gita's teachings. "
+            "This should be someone who understands both modern life and timeless wisdom.\n\n"
+            "3. A supporting character who represents the worldly perspective and adds complexity to the situation.\n\n"
+            "For each character, describe:\n"
+            "- Their role in modern society\n"
+            "- Their internal conflicts\n"
+            "- Their perspective on the situation\n"
+            "- How they embody specific aspects of the Gita's teachings"
         ),
     )
     chain = character_creator_prompt | llm | output_parser
@@ -76,20 +86,30 @@ async def weave_plot(state: StoryState) -> StoryState:
     plot_weaver_prompt = PromptTemplate(
         input_variables=["core_story", "characters"],
         template=(
-            "Using this modern dilemma: {core_story}\n"
+            "Using this modern situation: {core_story}\n"
             "And these characters: {characters}\n\n"
-            "Create a narrative in 4 distinct parts:\n"
-            "1. Establish the protagonist's situation and the mounting tension of their problem\n"
-            "2. Show their initial attempts to solve it and why these attempts fall short\n"
-            "3. Introduce the mentor's guidance, specifically drawing from relevant Bhagavad Gita teachings such as:\n"
-            "   - Karma Yoga (selfless action)\n"
-            "   - Dharma (duty and righteousness)\n"
-            "   - The nature of the self and attachment\n"
-            "   - The importance of right action over results\n"
-            "4. Demonstrate how applying these teachings transforms the protagonist's understanding "
-            "and leads to a resolution\n\n"
-            "Keep the narrative focused on the internal transformation while making the external "
-            "situation relatable to modern readers."
+            "Create a narrative that shows how the Bhagavad Gita's teachings can illuminate modern challenges. "
+            "Structure it in these parts:\n\n"
+            "1. THE MODERN BATTLEFIELD (Setting & Conflict)\n"
+            "- Establish the contemporary situation\n"
+            "- Show how modern pressures create confusion\n"
+            "- Highlight the parallel between this situation and Arjuna's dilemma\n\n"
+            "2. THE STRUGGLE (Initial Attempts)\n"
+            "- Show common worldly approaches to solving the problem\n"
+            "- Demonstrate why materialistic solutions fall short\n"
+            "- Reveal the deeper spiritual questions at play\n\n"
+            "3. GITA'S GUIDANCE (Wisdom Revealed)\n"
+            "- Introduce specific teachings from the Gita that apply to this situation\n"
+            "- Connect ancient wisdom to modern context\n"
+            "- Include relevant concepts such as:\n"
+            "  * Karma Yoga (selfless action)\n"
+            "  * Dharma (duty and righteousness)\n"
+            "  * Detachment from results\n"
+            "  * The eternal nature of the self\n\n"
+            "4. TRANSFORMATION (Resolution)\n"
+            "- Show how understanding the Gita's wisdom changes the perspective\n"
+            "- Demonstrate practical application of the teachings\n"
+            "- Reveal the universal truth within the particular situation"
         ),
     )
     chain = plot_weaver_prompt | llm | output_parser
@@ -108,16 +128,25 @@ async def refine_story(state: StoryState) -> StoryState:
         input_variables=["narrative"],
         template=(
             "Take this narrative: {narrative}\n\n"
-            "Enhance it into a polished story that:\n"
-            "1. Clearly presents the modern problem and makes readers empathize with the protagonist's struggle\n"
-            "2. Weaves in Bhagavad Gita's teachings naturally through dialogue and reflection\n"
-            "3. Shows a clear transformation in the protagonist's understanding\n"
-            "4. Connects the resolution to universal principles from the Gita\n\n"
-            "Add meaningful dialogues between the mentor and protagonist that echo Krishna-Arjuna conversations, "
-            "but in contemporary language. Include specific verses or concepts from the Bhagavad Gita where relevant, "
-            "explaining them in accessible terms.\n\n"
-            "The final story should be engaging and profound, under 2000 words, with clear paragraphs "
-            "and a balance of action, dialogue, and reflection."
+            "Transform it into a powerful story that bridges ancient wisdom and modern life. The story should:\n\n"
+            "1. AUTHENTICITY\n"
+            "- Maintain the philosophical depth of the Bhagavad Gita\n"
+            "- Include specific verses with their chapter and verse numbers\n"
+            "- Explain Sanskrit terms in accessible language\n\n"
+            "2. MODERN RELEVANCE\n"
+            "- Use contemporary language and situations\n"
+            "- Make the wisdom practical and applicable\n"
+            "- Address real-world complexities\n\n"
+            "3. NARRATIVE STRUCTURE\n"
+            "- Balance action, dialogue, and reflection\n"
+            "- Include meaningful conversations that echo Krishna-Arjuna dynamics\n"
+            "- Show both external events and internal transformation\n\n"
+            "4. WISDOM INTEGRATION\n"
+            "- Weave teachings naturally into the story\n"
+            "- Connect specific verses to modern challenges\n"
+            "- Show how eternal principles apply to temporary situations\n\n"
+            "Format the story with clear paragraphs, meaningful dialogue, and a length of 1500-2000 words. "
+            "Include relevant verse references in (parentheses) where teachings are discussed."
         ),
     )
     chain = stylist_prompt | llm | output_parser
