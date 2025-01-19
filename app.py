@@ -7,6 +7,13 @@ from langgraph.graph import Graph, END
 import chainlit as cl
 import logging
 import time
+from prompts import (
+    STORY_ARCHITECT_TEMPLATE,
+    CHARACTER_CREATOR_TEMPLATE,
+    PLOT_WEAVER_TEMPLATE,
+    STYLIST_TEMPLATE,
+    THEME_GENERATOR_TEMPLATE
+)
 
 # Configure logging
 logging.basicConfig(
@@ -34,18 +41,7 @@ async def generate_core_story(state: StoryState) -> StoryState:
     logger.info("Step 1/4: Starting core story generation...")
     story_architect_prompt = PromptTemplate(
         input_variables=["theme"],
-        template=(
-            "As a wise interpreter of the Bhagavad Gita, examine the theme '{theme}' "
-            "and identify a pressing contemporary challenge that many people face today. "
-            "Focus on a situation where modern life intersects with the eternal wisdom "
-            "of the Gita. The challenge should:\n"
-            "1. Be a real-world situation that people commonly face today\n"
-            "2. Involve an ethical or spiritual dilemma that isn't easily solved\n"
-            "3. Mirror the depth of Arjuna's confusion in the Gita\n"
-            "4. Need guidance that the Gita's teachings could illuminate\n\n"
-            "Frame this in 2-3 sentences, emphasizing both the external situation "
-            "and the internal struggle."
-        ),
+        template=STORY_ARCHITECT_TEMPLATE,
     )
     chain = story_architect_prompt | llm | output_parser
     
@@ -59,20 +55,7 @@ async def create_characters(state: StoryState) -> StoryState:
     logger.info("Step 2/4: Starting character creation...")
     character_creator_prompt = PromptTemplate(
         input_variables=["core_story"],
-        template=(
-            "For this modern situation: {core_story}\n"
-            "Create 3 essential characters that embody the dynamics found in the Bhagavad Gita:\n\n"
-            "1. A protagonist who, like Arjuna, faces a difficult choice and experiences confusion (dharma-sankata). "
-            "They should be a relatable modern person dealing with real-world pressures.\n\n"
-            "2. A mentor figure who, like Krishna, can illuminate the situation through Gita's teachings. "
-            "This should be someone who understands both modern life and timeless wisdom.\n\n"
-            "3. A supporting character who represents the worldly perspective and adds complexity to the situation.\n\n"
-            "For each character, describe:\n"
-            "- Their role in modern society\n"
-            "- Their internal conflicts\n"
-            "- Their perspective on the situation\n"
-            "- How they embody specific aspects of the Gita's teachings"
-        ),
+        template=CHARACTER_CREATOR_TEMPLATE,
     )
     chain = character_creator_prompt | llm | output_parser
     
@@ -85,32 +68,7 @@ async def weave_plot(state: StoryState) -> StoryState:
     logger.info("Step 3/4: Starting plot development...")
     plot_weaver_prompt = PromptTemplate(
         input_variables=["core_story", "characters"],
-        template=(
-            "Using this modern situation: {core_story}\n"
-            "And these characters: {characters}\n\n"
-            "Create a narrative that shows how the Bhagavad Gita's teachings can illuminate modern challenges. "
-            "Structure it in these parts:\n\n"
-            "1. THE MODERN BATTLEFIELD (Setting & Conflict)\n"
-            "- Establish the contemporary situation\n"
-            "- Show how modern pressures create confusion\n"
-            "- Highlight the parallel between this situation and Arjuna's dilemma\n\n"
-            "2. THE STRUGGLE (Initial Attempts)\n"
-            "- Show common worldly approaches to solving the problem\n"
-            "- Demonstrate why materialistic solutions fall short\n"
-            "- Reveal the deeper spiritual questions at play\n\n"
-            "3. GITA'S GUIDANCE (Wisdom Revealed)\n"
-            "- Introduce specific teachings from the Gita that apply to this situation\n"
-            "- Connect ancient wisdom to modern context\n"
-            "- Include relevant concepts such as:\n"
-            "  * Karma Yoga (selfless action)\n"
-            "  * Dharma (duty and righteousness)\n"
-            "  * Detachment from results\n"
-            "  * The eternal nature of the self\n\n"
-            "4. TRANSFORMATION (Resolution)\n"
-            "- Show how understanding the Gita's wisdom changes the perspective\n"
-            "- Demonstrate practical application of the teachings\n"
-            "- Reveal the universal truth within the particular situation"
-        ),
+        template=PLOT_WEAVER_TEMPLATE,
     )
     chain = plot_weaver_prompt | llm | output_parser
     
@@ -126,28 +84,7 @@ async def refine_story(state: StoryState) -> StoryState:
     logger.info("Step 4/4: Starting final story refinement...")
     stylist_prompt = PromptTemplate(
         input_variables=["narrative"],
-        template=(
-            "Take this narrative: {narrative}\n\n"
-            "Transform it into a powerful story that bridges ancient wisdom and modern life. The story should:\n\n"
-            "1. AUTHENTICITY\n"
-            "- Maintain the philosophical depth of the Bhagavad Gita\n"
-            "- Include specific verses with their chapter and verse numbers\n"
-            "- Explain Sanskrit terms in accessible language\n\n"
-            "2. MODERN RELEVANCE\n"
-            "- Use contemporary language and situations\n"
-            "- Make the wisdom practical and applicable\n"
-            "- Address real-world complexities\n\n"
-            "3. NARRATIVE STRUCTURE\n"
-            "- Balance action, dialogue, and reflection\n"
-            "- Include meaningful conversations that echo Krishna-Arjuna dynamics\n"
-            "- Show both external events and internal transformation\n\n"
-            "4. WISDOM INTEGRATION\n"
-            "- Weave teachings naturally into the story\n"
-            "- Connect specific verses to modern challenges\n"
-            "- Show how eternal principles apply to temporary situations\n\n"
-            "Format the story with clear paragraphs, meaningful dialogue, and a length of 1500-2000 words. "
-            "Include relevant verse references in (parentheses) where teachings are discussed."
-        ),
+        template=STYLIST_TEMPLATE,
     )
     chain = stylist_prompt | llm | output_parser
     
@@ -187,22 +124,7 @@ async def create_story_workflow(theme: str) -> str:
 # Step 1: Agent to Generate Themes
 theme_generator_prompt = PromptTemplate(
     input_variables=[],
-    template=(
-        "Generate exactly 5 moral themes from the Bhagavad Gita's teachings. "
-        "Each theme must be on a new line and follow this exact format without any additional text:\n\n"
-        "'Theme Name (Sanskrit Term) - Brief one-sentence description'\n\n"
-        "Required format examples:\n"
-        "Duty (Karma Yoga) - The struggle of fulfilling one's responsibilities without attachment\n"
-        "Renunciation (Sanyasa Yoga) - A journey of letting go of worldly desires\n"
-        "Compassion (Karuna) - Acts of selfless love and kindness\n\n"
-        "Rules:\n"
-        "1. Each line must contain exactly one theme\n"
-        "2. Include the Sanskrit term in parentheses\n"
-        "3. Provide a clear, concise description after the hyphen\n"
-        "4. Do not add any additional text, numbers, or explanations\n"
-        "5. Do not use asterisks or other formatting\n\n"
-        "Generate 5 new themes now:"
-    ),
+    template=THEME_GENERATOR_TEMPLATE,
 )
 # Create runnable chain
 theme_generator_chain = theme_generator_prompt | llm | output_parser
